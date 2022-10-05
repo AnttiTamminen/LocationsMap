@@ -27,10 +27,9 @@ if os.name == 'nt':
 SECRET_KEY = 'django-insecure-flbqklqbqhvkb9&z+vhj9f2g#3kg62eii8^+j=fv1u#!bqi(09'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['127.0.0.1']
 
 # Application definition
 
@@ -45,10 +44,13 @@ INSTALLED_APPS = [
     'leaflet',
     'locations',
     'rest_framework',
-    'rest_framework_gis'
+    'rest_framework_gis',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -56,6 +58,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://172.20.80.1:3000",
 ]
 
 ROOT_URLCONF = 'locations_api.urls'
