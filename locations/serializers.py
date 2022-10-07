@@ -5,5 +5,5 @@ class POISerializer(GeoFeatureModelSerializer):
     class Meta:
         model = POI
         geo_field = 'location'
-        fields = ['author', 'name', 'desc', 'created', 'updated']
+        fields = ['userid', 'author', 'name', 'desc', 'created', 'updated']
         read_only_fields = ['id', 'created', 'updated']

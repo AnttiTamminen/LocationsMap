@@ -33,7 +33,7 @@ export const iconB = new Icon({
 
 const fetcher = (url) => axios.get(url).then((res) => res.data)
   
-const LocationsMap = () => {
+const Home = () => {
     const [activeLocation, setActiveLocation] = useState(null);
   
     const { data, error } = useSWR("http://127.0.0.1:8000/api/locations/", fetcher);
@@ -138,7 +138,7 @@ const LocationsMap = () => {
         ))}
             <EditControl 
                 position="topleft"
-                // onCreated={_onCreate}
+                // onCreated={_onCreate} REMEMBER TO PREVENT if not authenticated
                 // onEdited={_onEdit}
                 // onDeleted={_onDelete}
                 draw={{
@@ -154,4 +154,4 @@ const LocationsMap = () => {
     );
 };
 
-export default LocationsMap;
+export default Home;

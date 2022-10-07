@@ -3,7 +3,8 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 
 class POI(models.Model):
-    author = models.ForeignKey(User, related_name='pois', null=True, on_delete=models.SET_NULL)
+    userid = models.ForeignKey(User, related_name='pois', null=True, on_delete=models.SET_NULL)
+    author = models.CharField(max_length=20)
     name = models.CharField(max_length=30)
     desc = models.CharField(max_length=200)
     location = models.PointField()
