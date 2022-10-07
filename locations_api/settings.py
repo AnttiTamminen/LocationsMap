@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/dev/ref/settings/
 """
 
-from pathlib import Path
+# from pathlib import Path
 import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -45,7 +45,9 @@ INSTALLED_APPS = [
     'locations',
     'rest_framework',
     'rest_framework_gis',
-    'corsheaders'
+    'corsheaders',
+    'knox',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -100,6 +102,12 @@ DATABASES = {
     }
 }
 
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'knox.auth.TokenAuthentication',
+    ]
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-password-validators
