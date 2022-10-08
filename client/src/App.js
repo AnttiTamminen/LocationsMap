@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { useEffect, useState } from 'react';
 import { Routes, Route, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import './App.css';
@@ -6,9 +7,29 @@ import Home from './components/Home'
 
 import Login from "./components/Login";
 import Register from "./components/Register";
-import Logout from "./components/Logout";
+import AuthService from "./services/authService";
+import AddLocation from "./components/addLocation";
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.logOut = this.logOut.bind(this);
+
+    this.state = {
+      currentUser: localStorage.user,
+    };
+  }
+
+  logOut() {
+    if (this.state.currentUser) {
+      AuthService.logout().then(
+      this.setState({
+        currentUser: undefined,
+      }));
+      localStorage.removeItem("user")
+    }
+  }
+
   render() {
     return (
       <div>
@@ -19,31 +40,37 @@ class App extends Component {
                 Home
               </Link>
             </li>
-            <li className="nav-item">
-              <Link to={"/login"} className="nav-link">
-                Login
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to={"/register"} className="nav-link">
-                Register
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to={"/logout"} className="nav-link">
-                Logout
-              </Link>
-            </li>
           </div>
+          {this.s}
+            <div className="navbar-nav ml-auto">
+              <li className="nav-item">
+                <a href="/" className="nav-link" onClick={this.logOut}>
+                  Logout
+                </a>
+              </li>
+            </div>
+            <div className="navbar-nav ml-auto">
+              <li className="nav-item">
+                <Link to={"/login"} className="nav-link">
+                  Login
+                </Link>
+              </li>
+
+              <li className="nav-item">
+                <Link to={"/register"} className="nav-link">
+                  Register
+                </Link>
+              </li>
+            </div>
         </nav>
 
         <div className="container mt-3">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/create" element={<AddLocation />} />
             <Route path="/home" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route exact path="/register" component={Register} />
-            <Route path="/logout" component={Logout} />
           </Routes>
         </div>
       </div>

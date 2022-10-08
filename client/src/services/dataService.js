@@ -1,24 +1,26 @@
-import http from "../http-common";
+import axios from "axios";
+
+const API_URL = "http://127.0.0.1:8000/api/locations/";
 
 class DataDataservice {
     getAll() {
-        return http.get("locations");
+        return axios.get("");
     }
 
     get(id) {
-        return http.get('locations/${id}');
+        return axios.get('${id}');
     }
 
     create(data) {
-        return http.post("locations", data);
+        return axios.post("", data);
     }
 
     update(id, data) {
-        return http.put('locations/${id}', data);
+        return axios.put('${id}', data);
     }
 
     delete(id) {
-        return http.delete('locations/${id}');
+        return axios.delete('${id}');
     }
 
 }

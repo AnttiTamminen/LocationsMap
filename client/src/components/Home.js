@@ -8,6 +8,21 @@ import { EditControl } from "react-leaflet-draw"
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
 import L from 'leaflet';
+import AddLocation from "./addLocation";
+
+export const iconG = new Icon({
+  iconUrl: "green.png",
+  iconSize: [25, 45],
+  iconAnchor: [13, 45],
+  popupAnchor: [0, -35],
+});
+
+export const iconB = new Icon({
+  iconUrl: "blue.png",
+  iconSize: [25, 45],
+  iconAnchor: [13, 45],
+  popupAnchor: [0, -35],
+});
 
 delete L.Icon.Default.prototype._getIconUrl;
   L.Icon.Default.mergeOptions({
@@ -16,20 +31,6 @@ delete L.Icon.Default.prototype._getIconUrl;
     iconAnchor: [13, 45],
     popupAnchor: [0, -35],
   });
-
-export const iconG = new Icon({
-    iconUrl: "green.png",
-    iconSize: [25, 45],
-    iconAnchor: [13, 45],
-    popupAnchor: [0, -35],
-});
-  
-export const iconB = new Icon({
-    iconUrl: "blue.png",
-    iconSize: [25, 45],
-    iconAnchor: [13, 45],
-    popupAnchor: [0, -35],
-});
 
 const fetcher = (url) => axios.get(url).then((res) => res.data)
   
@@ -59,6 +60,14 @@ const Home = () => {
         />
       );
     }
+
+    const _onCreate = (e) => {
+      if (localStorage.user) {
+        <AddLocation lat={e.layer._latlng.lat} lng={e.layer._latlng.lng}/>
+      } else {
+        window.location.reload()
+      }
+    }
   
     return (
       <MapContainer center={position} zoom={zoom}>
@@ -69,7 +78,11 @@ const Home = () => {
         />
         <FeatureGroup>
         {locations.features.filter(function (e) {
-          return e.properties.name != 'Testi1';
+          if (localStorage.user) {
+            return e.properties.name != JSON.parse(localStorage.user).username;
+          } else {
+            return e;
+          }
           }).map((location) =>(
           <Marker
             key={location.properties.name}
@@ -104,7 +117,11 @@ const Home = () => {
         </FeatureGroup>
         <FeatureGroup>
         {locations.features.filter(function (e) {
-          return e.properties.name == 'Testi1';
+          if (localStorage.user) {
+            return e.properties.name == JSON.parse(localStorage.user).username;
+          } else {
+            return e.properties.created == null;
+          }
           }).map((location) =>(
           <Marker
             key={location.properties.name}
@@ -138,7 +155,7 @@ const Home = () => {
         ))}
             <EditControl 
                 position="topleft"
-                // onCreated={_onCreate} REMEMBER TO PREVENT if not authenticated
+                onCreated={_onCreate}
                 // onEdited={_onEdit}
                 // onDeleted={_onDelete}
                 draw={{

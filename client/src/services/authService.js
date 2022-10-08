@@ -1,8 +1,15 @@
-import http from "../http-common";
+import axios from "axios";
+
+const API_URL = "http://127.0.0.1:8000/api/auth/";
 
 class AuthService {
-    login(data) {
-        return http.post("auth/login", JSON.stringify(data))
+    login(username, password) {
+        const loginConfig = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        } 
+        return axios.post(API_URL + "login", {username, password}, loginConfig)
         .then(response => {
             if (response.data.token) {
                 localStorage.setItem("user", JSON.stringify(response.data));
@@ -11,16 +18,21 @@ class AuthService {
     }
 
     logout() {
-    return http.post("auth/logout", JSON.parse(localStorage.getItem('user').token))
-    .then(response => {
-            if(response === []) {
+        const logoutConfig = {
+            headers: {
+                'Authorization': 'Token ' + JSON.parse(localStorage.getItem('user')).token
+            }
+        } 
+        return axios.post(API_URL + "logout", null, logoutConfig)
+        .then(response => {
+            if (response.status === 204) {
                 localStorage.removeItem("user");
             }
-        });
+        })
     }
 
     register(username, email, password) {
-        return http.post("auth/register", {
+        return axios.post(API_URL + "register", {
         username,
         email,
         password

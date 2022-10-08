@@ -1,7 +1,6 @@
-from .views import RegisterAPI, UserAPI
+from .views import RegisterAPI, UserAPI, LoginAPI
 from django.urls import path
 from knox import views as knox_views
-from .views import LoginAPI
 from django.urls import path, include
 
 
