@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Icon } from "leaflet";
 import {Alert, Spinner} from "react-bootstrap";
-import {MapContainer, TileLayer, Marker, Popup, useMapEvents, FeatureGroup} from "react-leaflet";
+import {MapContainer, TileLayer, Marker, Popup, FeatureGroup} from "react-leaflet";
 import useSWR from "swr";
 import { EditControl } from "react-leaflet-draw"
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
 import L from 'leaflet';
-import AddLocation from "./addLocation";
+import DataService from "../services/dataService";
 
 export const iconG = new Icon({
   iconUrl: "green.png",
@@ -63,7 +63,38 @@ const Home = () => {
 
     const _onCreate = (e) => {
       if (localStorage.user) {
-        <AddLocation lat={e.layer._latlng.lat} lng={e.layer._latlng.lng}/>
+        DataService.create({author: JSON.parse(localStorage.getItem('user')).user.username, 
+        userid: JSON.parse(localStorage.getItem('user')).user.id,
+        lat: e.layer._latlng.lat, 
+        lng: e.layer._latlng.lng}).then(
+          () => {
+            window.location.reload();
+          });
+      } else {
+        window.location.reload()
+      }
+    }
+
+    const _onDelete = (e) => {
+      const id = String(Object.values(e.layers._layers)[0].options.layerID)
+      console.log(id)
+      if (localStorage.user) {
+          DataService.delete(id).then(
+            window.location.reload()
+          )
+      } else {
+        window.location.reload()
+      }
+    }
+
+    const _onEdit = (e) => {
+      const id = String(Object.values(e.layers._layers)[0].options.layerID)+'/'
+      const lat = Object.values(e.layers._layers)[0]._latlng.lat
+      const lng = Object.values(e.layers._layers)[0]._latlng.lng
+      if (localStorage.user) {
+        DataService.update(id, lat, lng).then(
+          window.location.reload()
+        )
       } else {
         window.location.reload()
       }
@@ -77,78 +108,78 @@ const Home = () => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <FeatureGroup>
-        {locations.features.filter(function (e) {
+        {locations.filter(function (e) {
           if (localStorage.user) {
-            return e.properties.name != JSON.parse(localStorage.user).username;
+            return e.author != JSON.parse(localStorage.getItem('user')).user.username;
           } else {
             return e;
           }
           }).map((location) =>(
           <Marker
-            key={location.properties.name}
+            key={location.id}
             position={[
-              location.geometry.coordinates[1],
-              location.geometry.coordinates[0],
+              location.lat,
+              location.lng,
             ]}
             onClick={() => {
               setActiveLocation(location)
             }}
             icon={iconB}
+            layerID={location.id}
           >
             <Popup
               position={[
-                location.geometry.coordinates[1],
-                location.geometry.coordinates[0],
+                location.lat,
+                location.lng,
               ]}
               onClose={() => {
                 setActiveLocation(null)
               }}
             >
               <div>
-                <h6>{location.properties.name}</h6>
-                <p>{location.properties.desc}</p>
-                <p>Author: {location.properties.author}</p>
-                <p>Created: {location.properties.created.toString().slice(0, 19).replace(/-/g, "/").replace("T", " ")}</p>
-                <p>Updated: {location.properties.updated.toString().slice(0, 19).replace(/-/g, "/").replace("T", " ")}</p>
+                <p>Author: {location.author}</p>
+                <p>Created: {location.created.toString().slice(0, 19).replace(/-/g, "/").replace("T", " ")}</p>
+                <p>Updated: {location.updated.toString().slice(0, 19).replace(/-/g, "/").replace("T", " ")}</p>
               </div>
             </Popup>
           </Marker>
         ))}
         </FeatureGroup>
         <FeatureGroup>
-        {locations.features.filter(function (e) {
+        {locations.filter(function (e) {
           if (localStorage.user) {
-            return e.properties.name == JSON.parse(localStorage.user).username;
+            return e.author == JSON.parse(localStorage.getItem('user')).user.username;
           } else {
-            return e.properties.created == null;
+            return e.created == null;
           }
           }).map((location) =>(
           <Marker
-            key={location.properties.name}
+            key={location.id}
             position={[
-              location.geometry.coordinates[1],
-              location.geometry.coordinates[0],
+              location.lat,
+              location.lng,
             ]}
             onClick={() => {
               setActiveLocation(location)
             }}
             icon={iconG}
+            layerID={location.id}
           >
             <Popup
               position={[
-                location.geometry.coordinates[1],
-                location.geometry.coordinates[0],
+                location.lat,
+                location.lng,
               ]}
               onClose={() => {
                 setActiveLocation(null)
               }}
             >
               <div>
-                <h6>{location.properties.name}</h6>
-                <p>{location.properties.desc}</p>
-                <p>Author: {location.properties.author}</p>
-                <p>Created: {location.properties.created.toString().slice(0, 19).replace(/-/g, "/").replace("T", " ")}</p>
-                <p>Updated: {location.properties.updated.toString().slice(0, 19).replace(/-/g, "/").replace("T", " ")}</p>
+                <h6>{location.name}</h6>
+                <p>{location.desc}</p>
+                <p>Author: {location.author}</p>
+                <p>Created: {location.created.toString().slice(0, 19).replace(/-/g, "/").replace("T", " ")}</p>
+                <p>Updated: {location.updated.toString().slice(0, 19).replace(/-/g, "/").replace("T", " ")}</p>
               </div>
             </Popup>
           </Marker>
@@ -156,8 +187,8 @@ const Home = () => {
             <EditControl 
                 position="topleft"
                 onCreated={_onCreate}
-                // onEdited={_onEdit}
-                // onDeleted={_onDelete}
+                onEdited={_onEdit}
+                onDeleted={_onDelete}
                 draw={{
                     rectangle: false,
                     polygon: false,

@@ -24,19 +24,19 @@ class AuthService {
             }
         } 
         return axios.post(API_URL + "logout", null, logoutConfig)
-        .then(response => {
-            if (response.status === 204) {
-                localStorage.removeItem("user");
-            }
-        })
     }
 
     register(username, email, password) {
+        const registerConfig = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        } 
         return axios.post(API_URL + "register", {
         username,
         email,
         password
-        });
+        }, registerConfig);
     }
 
     getCurrentUser() {

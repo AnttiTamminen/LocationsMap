@@ -3,6 +3,6 @@ from .views import POIViewSet
 
 router = DefaultRouter()
 
-router.register(prefix='api/locations', viewset=POIViewSet, basename='location')
+router.register('api/locations', POIViewSet, 'locations')
 
 urlpatterns = router.urls

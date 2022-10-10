@@ -1,9 +1,7 @@
-from rest_framework_gis.serializers import GeoFeatureModelSerializer
+from rest_framework import serializers
 from .models import POI
 
-class POISerializer(GeoFeatureModelSerializer):
+class POISerializer(serializers.ModelSerializer):
     class Meta:
         model = POI
-        geo_field = 'location'
-        fields = ['userid', 'author', 'name', 'desc', 'created', 'updated']
-        read_only_fields = ['id', 'created', 'updated']
+        fields = '__all__'

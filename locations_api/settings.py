@@ -93,11 +93,11 @@ WSGI_APPLICATION = 'locations_api.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'locations',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'dblocations',
         'USER': 'postgres',
         'PASSWORD': 'admin654321',
-        'HOST': 'localhost',
+        'HOST': '127.0.0.1',
         'PORT': '5432'
     }
 }
@@ -133,7 +133,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Europe/Copenhagen'
+TIME_ZONE = 'Europe/Helsinki'
 
 USE_I18N = True
 
@@ -150,11 +150,11 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LEAFLET_CONFIG = {
-    'SPATIAL_EXTENT': (20.6455928891, 59.846373196, 31.5160921567, 70.1641930203),
-    'DEFAULT_CENTER': (62.6011800, 29.7631600),
-    'DEFAULT_ZOOM': 11,
-    'MAX_ZOOM': 16,
-    'SCALE': 'metric',
-    'ATTRIBUTION_PREFIX': 'POI Collection Map'
-}
+# LEAFLET_CONFIG = {
+#     'SPATIAL_EXTENT': (20.6455928891, 59.846373196, 31.5160921567, 70.1641930203),
+#     'DEFAULT_CENTER': (62.6011800, 29.7631600),
+#     'DEFAULT_ZOOM': 11,
+#     'MAX_ZOOM': 16,
+#     'SCALE': 'metric',
+#     'ATTRIBUTION_PREFIX': 'POI Collection Map'
+# }

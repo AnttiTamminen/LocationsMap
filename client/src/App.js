@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { useEffect, useState } from 'react';
 import { Routes, Route, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import './App.css';
@@ -8,7 +7,6 @@ import Home from './components/Home'
 import Login from "./components/Login";
 import Register from "./components/Register";
 import AuthService from "./services/authService";
-import AddLocation from "./components/addLocation";
 
 class App extends Component {
   constructor(props) {
@@ -67,10 +65,9 @@ class App extends Component {
         <div className="container mt-3">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/create" element={<AddLocation />} />
             <Route path="/home" element={<Home />} />
             <Route path="/login" element={<Login />} />
-            <Route exact path="/register" component={Register} />
+            <Route path="/register" element={<Register />} />
           </Routes>
         </div>
       </div>
