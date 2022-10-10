@@ -1,8 +1,8 @@
-from django.contrib import admin
-from leaflet.admin import LeafletGeoAdmin
-from .models import POI
+# from django.contrib import admin
+# from leaflet.admin import LeafletGeoAdmin
+# from .models import POI
 
-class POIAdmin(LeafletGeoAdmin):
-    list_display = ['author', 'created', 'updated']
+# class POIAdmin(LeafletGeoAdmin):
+#     list_display = ['author', 'created', 'updated']
 
-admin.site.register(POI, POIAdmin)
+# admin.site.register(POI, POIAdmin)
